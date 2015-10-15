@@ -11,9 +11,6 @@ install:
   - npm install --production
   - npm run init
 
-script:
-  - mocha
-
 deploy:
   provider: heroku
   api_key: fe536612498f1f20a952205a245f141986a4f348
