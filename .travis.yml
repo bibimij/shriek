@@ -11,16 +11,11 @@ install:
   - npm install --production
   - bower install
 
-before_script:
-  - "gulp bower sass build"
-
 deploy:
   provider: heroku
   api_key: fe536612498f1f20a952205a245f141986a4f348
   app: shriek-alex
   run:
-    - "npm install --production"
-    - "bower install"
     - "gulp bower sass build"
     - restart
 
