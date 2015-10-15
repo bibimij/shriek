@@ -9,12 +9,17 @@ branches:
 
 install:
   - npm install --production
-  - npm run init
+  - bower install
+  - gulp
 
 deploy:
   provider: heroku
   api_key: fe536612498f1f20a952205a245f141986a4f348
   app: shriek-alex
-  run: 'pm2 deploy production'
+  run:
+    - "npm install --production"
+    - "bower install"
+    - gulp
+    - restart
   on:
     branch: master

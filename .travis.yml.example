@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+  - "4.0.0"
+
+branches:
+  only:
+    - master
+
+install:
+  - npm install --production
+  - npm run init
+
+script:
+  - mocha
+
+deploy:
+  provider: heroku
+  api_key: YOUR_KEY
+  app: YOUR_APP_NAME
+  run: 'pm2 deploy production'
+  on:
+    branch: master
