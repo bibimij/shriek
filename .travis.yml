@@ -10,7 +10,9 @@ branches:
 install:
   - npm install --production
   - bower install
-  - gulp
+
+before_script:
+  - "gulp bower sass build"
 
 deploy:
   provider: heroku
@@ -19,7 +21,8 @@ deploy:
   run:
     - "npm install --production"
     - "bower install"
-    - gulp
+    - "gulp bower sass build"
     - restart
+
   on:
     branch: master
