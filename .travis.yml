@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "4.0.0"
+  - 4.0.0
 
 branches:
   only:
@@ -9,15 +9,22 @@ branches:
 
 install:
   - npm install --production
+  - npm install -g gulp
+  - npm install -g mocha
   - bower install
+
+script:
+  # Tests if needed
+  #- mocha
+
+after_success:
+  - chmod 600 deploy_key
+  - mv deploy_key ~/.ssh/id_rsa
 
 deploy:
   provider: heroku
-  api_key: fe536612498f1f20a952205a245f141986a4f348
+  api_key:
+    secure: HwXwsayhs+rV322mazcTnGt9ym9qn0lr4Z+ynCjFo43HVRJ41flCZffZ98DWyTvdF9IH5WoVXNWcAHlWT4B01a6Ef2ibIIQvESPlNUrGd+O5T/uaQwII73U/6bjxm3OhmmDC7S9APT5tpn+DMMch2Cdxni5MXkNBzeZr/2Fb/z0jQfY3SSxXDmCXbYloKBsu9cbHGDA46pTPoF0wNzZOY1dKy3Sxip6QRd7LQdLGEx9SrsnmB6aaiieFSi4ljySerQE6QF+7eOyb56sUEmyre5JNWpzY3s7wZqvyLohyIsArwwLDafd6rIhdK3B69ymWj3X10YO80vZFqm0UO5MomMR4o7Tj1ry4ZHRBskeY/Pn6Xd8VV+cx5CsyZDSWTwaNnacTI/xlY21MysAj2OQr0uXHC5wt2qpbCnoV6jrAXNSKkHwT8pZNHKoR7ugd3YxzJDgRTp4ymgdbUOi3vTIu1I2iqWjKU2GvV5U2HYAlPMfoRJPKLf/cctGfQp+ELNaU9qn5F8wKAvkhrEP46185YcJ9+gxelx11tOyyMpfbeODZddCoLKr2p8MrTyGi/RoOqu/CXcLtltF9jwdtvBRP2nl2ayDnwxzWOtSKOF+8BMF/vIUNAkBceoDneK1lba4OJmebrem4BXkLZNPWojK6rcWY4w22K7JdM+I3dO04Y1Q=
   app: shriek-alex
-  run:
-    - "gulp bower sass build"
-    - restart
-
   on:
-    branch: master
+    repo: bibimij/shriek
