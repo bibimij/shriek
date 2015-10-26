@@ -8,9 +8,9 @@ branches:
     - master
 
 install:
-  - npm install --production
-  - npm install -g gulp
-  - npm install -g mocha
+  - npm install --production --silent
+  - npm install -g gulp --silent
+  - npm install -g mocha --silent
   - bower install
 
 script:
