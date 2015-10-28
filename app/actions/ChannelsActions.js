@@ -28,6 +28,10 @@ var ChannelsActions = alt_obj.createActions({
     this.dispatch(error);
   },
 
+  playSound: function () {
+    document.querySelector('.incoming-message').play();
+  },
+
   initChannels: function (socket) { // это функция инициализации, тут мы подписываемся на сообщение из сокета
     var _this = this;
 
@@ -43,6 +47,7 @@ var ChannelsActions = alt_obj.createActions({
     socket.on('message send', function (data) {
       if (data.message.channel !== socket.activeChannel) { // только если сообщение пришло в не активный канал
         _this.actions.setUnreadChannel(data.message.channel);
+        _this.actions.playSound();
       }
     });
 
@@ -73,7 +78,7 @@ var ChannelsActions = alt_obj.createActions({
     });
   },
 
-  //обновляем стейт показа/убирания окна добавления канала
+  // обновляем стейт показа/убирания окна добавления канала
   updateShowModal: function (state) {
     this.dispatch(state);
   },
@@ -82,17 +87,17 @@ var ChannelsActions = alt_obj.createActions({
     socket.emit('channel list'); // дергаем бекенд, чтобы получить список каналов
   },
 
-  //срабатывает при клике на чекбокс, добавляет юзера в новый канал
+  // срабатывает при клике на чекбокс, добавляет юзера в новый канал
   addUserToNewChannel: function (username) {
     this.dispatch(username);
   },
 
-  //срабатывает при клике на чекбокс, отменяет добавление юзера в новый канал
+  // срабатывает при клике на чекбокс, отменяет добавление юзера в новый канал
   deleteUserFromNewChannel: function (username) {
     this.dispatch(username);
   },
 
-  //срабатывает на клике формы добавление канала
+  // срабатывает на клике формы добавление канала
   addNewChannel: function (newChannel) {
     this.dispatch(newChannel);
   },
@@ -102,4 +107,5 @@ var ChannelsActions = alt_obj.createActions({
   }
 });
 
-module.exports = alt_obj.createActions('ChannelsActions', ChannelsActions); // первый параметр имя экшена — обязательный в ES5
+// первый параметр имя экшена — обязательный в ES5
+module.exports = alt_obj.createActions('ChannelsActions', ChannelsActions);

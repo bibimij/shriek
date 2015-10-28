@@ -88,12 +88,17 @@ gulp.task('build', function () {
 // images
 gulp.task('images', function () {
   return gulp.src(path.IMGS)
-    .pipe(gulp.dest('./public/assets/img'));
+    .pipe(gulp.dest('public/assets/img'));
+});
+
+// audio
+gulp.task('audio', function () {
+  return gulp.src('app/assets/audio/**/*')
+    .pipe(gulp.dest('public/assets/audio'));
 });
 
 // sass
-
-gulp.task('sass', ['images'], function () {
+gulp.task('sass', ['images', 'audio'], function () {
   return gulp.src('app/assets/css/**/*.sass')
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('bundle.min.css'))
