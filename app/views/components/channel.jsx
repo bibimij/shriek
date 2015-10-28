@@ -83,7 +83,6 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
     },
 
     render: function () {
-
       var className = 'list__item ' +
         (this.props.channel.isActive ? ' active' : '') +
         (this.props.channel.isUnread ? ' unread' : '');
@@ -130,8 +129,7 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
 
   var UserList = React.createClass({
     render: function () {
-      var UsersList = [];
-      UsersList = this.props.userlist.map(function (user) {
+      var UsersList = this.props.userlist.map(function (user) {
         return (<User key={user._id} user={user} />);
       });
 
@@ -170,8 +168,10 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
   var AddChannelModal = React.createClass({
     handleSubmit: function (e) {
       e.preventDefault();
+
       var name = React.findDOMNode(this.refs.сhannelName).value.trim();
       var description = React.findDOMNode(this.refs.channelDesc).value.trim();
+
       ChannelsActions.addNewChannel({name: name, description: description});
     },
 
@@ -210,8 +210,8 @@ var MessagesActions = require('./../../actions/MessagesActions'); // подкл�
                 <UserList userlist={this.props.userlist}/>
               </div>)}
             </div>
+
             <button className="btn" type="submit">Добавить</button>
-            <span> </span>
             <button className="btn" onClick={this.handleCloseModal} type="button">Закрыть</button>
           </form>
         </div>

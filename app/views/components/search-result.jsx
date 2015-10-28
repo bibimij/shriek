@@ -35,28 +35,24 @@ var SearchResultComponent = function (socket) {
       var dataset = e.currentTarget.dataset;
 
       socket.activeChannel = dataset.channel;
-      socket.emit('channel get',
-        {
-          channel: dataset.channel,
-          date: dataset.date,
-          limit: -1,
-          rtl: 'gte',
-          force: true,
-          scrollAfter: false
-        }
-      );
+      socket.emit('channel get', {
+        channel: dataset.channel,
+        date: dataset.date,
+        limit: -1,
+        rtl: 'gte',
+        force: true,
+        scrollAfter: false
+      });
 
       var id = dataset.id;
 
       setTimeout(function () {
-        socket.emit('channel get',
-          {
-            channel: dataset.channel,
-            date: dataset.date,
-            limit: 20,
-            scrollAfter: false
-          }
-        );
+        socket.emit('channel get', {
+          channel: dataset.channel,
+          date: dataset.date,
+          limit: 20,
+          scrollAfter: false
+        });
 
         setTimeout(function () {
           MessagesActions.highlightMessage(id);
@@ -68,14 +64,7 @@ var SearchResultComponent = function (socket) {
     },
 
     render: function () {
-      var localDate = new Date(this.props.message.created_at);
-      var hour = localDate.getHours();
-      var minutes = localDate.getMinutes();
-      var date = ('0' + hour).slice(-2) + ':' + ('0' + minutes).slice(-2);
-      var day = localDate.getDate();
-      var month = localDate.getMonth();
-      var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
-        ('0' + month).slice(-2) + '/' + localDate.getFullYear();
+      var fullDate = moment(this.props.message.created_at).format('HH:mm, DD/MM/YYYY');
 
       return (
         <div className='search-result'>
@@ -127,9 +116,9 @@ var SearchResultComponent = function (socket) {
           {this.state.showSearchResult == true && (
             <div className="modal" ref="overlaySearchResult">
                 <div className="form modal__body modal__search">
-                  <h2 className="modal__heading heading">Результат поиска</h2>
+                  <h2 className="modal__heading heading">Результаты поиска</h2>
                   <SearchResultList messages={this.state.messages} handleClose={this.handleClose} />
-                  <button className="btn" onClick={this.handleClose} type="button">Close</button>
+                  <button className="btn" onClick={this.handleClose} type="button">Закрыть</button>
                 </div>
             </div>
           )}

@@ -5,10 +5,11 @@ var MessageModel = require('../models/message');
 var ChannelModule = function (socket) {
 
   /**
-  * Слушаем создание чата с фронта
-  * @param data
-  * @param data.name название чата
-  */
+   * Слушаем создание чата с фронта
+   *
+   * @param data
+   * @param data.name название чата
+   */
   socket.on('channel create', function (data) {
     var createChannel = new Promise(function (resolve, reject) {
       var slug = slugify(data.name, {lowercase: true, separator: '_'}); // трансилитирируем name
@@ -85,12 +86,9 @@ var ChannelModule = function (socket) {
 
     });
 
-    getChannelInfo
-      .then(function (data) {
-        socket.emit('channel info', data);
-      })
-      .catch(function (error) {
-      });
+    getChannelInfo.then(function (data) {
+      socket.emit('channel info', data);
+    });
   });
 
   /**
@@ -116,12 +114,9 @@ var ChannelModule = function (socket) {
       );
     });
 
-    getChannelList
-      .then(function (data) {
-        socket.emit('channel list', data);
-      })
-      .catch(function (error) {
-      });
+    getChannelList.then(function (data) {
+      socket.emit('channel list', data);
+    });
   });
 
   /**
@@ -141,7 +136,7 @@ var ChannelModule = function (socket) {
       var query = {channel: data.channel}; // канал нужно учитывать всегда
 
       if (data.hasOwnProperty('date')) {
-        if (data.hasOwnProperty('rtl') && data.rtl == 'gte') {
+        if (data.hasOwnProperty('rtl') && data.rtl === 'gte') {
           query.created_at = {$gte: data.date}; // дата — если пришла
         } else {
           query.created_at = {$lt: data.date}; // дата — если пришла
@@ -165,8 +160,6 @@ var ChannelModule = function (socket) {
         newSkip = data.skip + 1;
         q.skip(newSkip * limit); // offset
       }
-
-
 
       q.exec(function (err, dbdata) { // выполняем запрос
         if (err) {
@@ -194,9 +187,9 @@ var ChannelModule = function (socket) {
 
     getMessages
       .then(function (data) {
-        return new Promise(function(resolve, reject) {
-          if (data.force == true) {
-            MessageModel.find({channel: data.slug}, function(testerr, testdata){
+        return new Promise(function (resolve, reject) {
+          if (data.force === true) {
+            MessageModel.find({channel: data.slug}, function (testerr, testdata) {
               if (testerr) {
                 reject(testerr);
               }

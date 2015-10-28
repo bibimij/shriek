@@ -25,12 +25,12 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
 
     render: function () {
       return (
-        <div className='search'>
-          <div className='form__row'>
-            <label className='form__label' htmlFor='search' onClick={this.handleSearch}>
-              <i className='fa fa-search'></i>
+        <div className="search">
+          <div className="form__row">
+            <label className="form__label" htmlFor="search" onClick={this.handleSearch}>
+              <i className="fa fa-search"></i>
             </label>
-            <input className='form__text' type='text' id='search' ref='search'/>
+            <input className="form__text" type="text" id="search" ref="search" placeholder="Поиск" />
           </div>
         </div>
       );

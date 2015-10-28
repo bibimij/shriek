@@ -52,23 +52,22 @@ var UserModule = function (socket, io) {
 
     UserModel.findOne({username: username}, function (err, doc) {
       if (!err && doc) {
-        if (data.passposrtInit) {
+        if (data.passportInit) {
           if (doc.checkPassport(password)) {
             out.status = 'ok';
             out.user = doc;
           }
         }
 
-        if (passportLogin === true || doc.checkPassword(password) ||
-          doc.checkHashedPassword(password)) {
+        if (passportLogin === true || doc.checkPassword(password) || doc.checkHashedPassword(password)) {
           out.status = 'ok';
           out.user = doc;
+
+          callbackUserEnter(out);
         } else {
           out.status = 'error';
           out.error_message = 'Неверный пароль';
         }
-
-        callbackUserEnter(out);
       } else {
         var newUser = new UserModel({
           username: username
@@ -93,9 +92,9 @@ var UserModule = function (socket, io) {
           } else {
             out.status = 'ok';
             out.user = saved_data;
-          }
 
-          callbackUserEnter(out);
+            callbackUserEnter(out);
+          }
         });
       }
     });
@@ -166,8 +165,8 @@ var UserModule = function (socket, io) {
     var username = data.username || socket.username;
 
     UserModel.findOne(
-      {username: username}, 
-      {salt: 0, hashedPassword: 0}, 
+      {username: username},
+      {salt: 0, hashedPassword: 0},
       function (err, doc) {
         if (!err && doc) {
           out = {
@@ -180,7 +179,7 @@ var UserModule = function (socket, io) {
             error_message: 'Пользователь не найден'
           };
         }
-  
+
         socket.emit('user info', out);
       }
     );

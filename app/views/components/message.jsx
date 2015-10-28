@@ -4,6 +4,8 @@ var ChatComponent = function (socket) {
 
   var ChannelUsers = require('../../views/components/channelUsers.jsx')(socket);
 
+  var cx = require('classnames');
+
   var ChatBox = React.createClass({
     getInitialState: function () {
       return MessagesStore.getState(); // теперь мы возвращаем стор, внутри которого хранятся значения стейтов по умолчанию
@@ -19,6 +21,7 @@ var ChatComponent = function (socket) {
         force: true,
         scrollAfter: true
       });
+
       socket.emit('channel info', {
         slug: socket.activeChannel
       });
@@ -46,24 +49,31 @@ var ChatComponent = function (socket) {
         };
 
         socket.emit('message send', message);
-        callback();
-      } else {
-        callback('Enter message, please!');
-      }
 
+        if (callback) {
+          callback();
+        }
+      } else {
+        if (callback) {
+          callback('Enter message, please!');
+        }
+      }
     },
 
     render: function () {
       return (
         <div className="msg">
           <div className="msg__loading"><i className="fa fa-circle-o-notch fa-spin"></i></div>
+
           <div className="msg__wrap">
             <div className="msg__body">
               <MessagesList messages={this.state.messages} hideMore={this.state.hideMore} />
             </div>
+
             <ChannelUsers />
           </div>
-          <MessageForm submitMessage={this.submitMessage} plugins={this.state.plugins}/>
+
+          <MessageForm submitMessage={this.submitMessage} plugins={this.state.plugins} />
         </div>
       );
     }
@@ -71,7 +81,7 @@ var ChatComponent = function (socket) {
 
   var MessagesList = React.createClass({
     getInitialState: function () {
-      return ( { } );
+      return ({});
     },
 
     componentDidMount: function () {
@@ -95,11 +105,9 @@ var ChatComponent = function (socket) {
       }
     },
 
-    componentDidUpdate: function () {
-
-    },
     clickMoreHandler: function() {
       var skip = MessagesStore.getState().skip; // подписываемся на изменения store
+
       MessagesActions.getMessages(socket, skip);
     },
 
@@ -112,10 +120,15 @@ var ChatComponent = function (socket) {
         });
       }
 
-      var classes = 'msg__load_more ' + (this.props.hideMore ? 'hidden' : '');
+      var classes = cx({
+        msg__load_more: true,
+        hidden: this.props.hideMore
+      });
+
       return (
         <div className="msg__list" ref="msglist">
           <div className={classes} onClick={this.clickMoreHandler}>Загрузить еще</div>
+
           {Messages}
         </div>
       );
@@ -124,20 +137,20 @@ var ChatComponent = function (socket) {
 
   var Message = React.createClass({
     render: function () {
-      var classes = ['msg__item'];
       var message = this.props.message.raw || this.props.message.text;
+      var classes = cx({
+        msg__item: true,
+        msg__searched: this.props.message.searched
+      });
 
-      if (this.props.message.searched) {
-        classes.push('msg__searched');
-      }
+      var time = moment(this.props.message.created_at).format('HH:mm');
+      var fullDate = moment(this.props.message.created_at).format('HH:mm, DD/MM/YYYY');
 
       return (
-        <div className={classes.join(' ')}>
-          <MessageDate date={this.props.message.created_at}/>
+        <div className={classes}>
+          <div className="msg__date" title={fullDate}>{time}</div>
           <span className="msg__author">{this.props.message.username}: </span>
-          <div
-            className="msg__text"
-            dangerouslySetInnerHTML={{__html: message}} />
+          <div className="msg__text" dangerouslySetInnerHTML={{__html: message}} />
         </div>
       );
     }
@@ -146,42 +159,39 @@ var ChatComponent = function (socket) {
   var MessageForm = React.createClass({
     handleSubmit: function (e) {
       e.preventDefault();
-      var _this = this; // чтобы потом найти текстовое поле
-      var text = this.refs.text.getDOMNode().value; // получаем текст
-      var submitButton = this.refs.submitButton.getDOMNode(); // получаем кнопку
-      submitButton.innerHTML = 'Posting message...'; // отключаем кнопку и меняем текст
-      submitButton.setAttribute('disabled', 'disabled');
 
-      this.props.submitMessage(text, function (err) { // вызываем submitMessage, передаем колбек
-        _this.refs.text.getDOMNode().value = '';
-        submitButton.innerHTML = 'Post message';
-        submitButton.removeAttribute('disabled');
-      });
+      var textarea = this.refs.text.getDOMNode();
 
+      this.props.submitMessage(textarea.value);
+
+      textarea.value = '';
     },
 
     resize: function() {
       var textarea = this.refs.text.getDOMNode();
+
       textarea.style.height = 'auto';
       textarea.style.height = (textarea.scrollHeight > 105 ? 105 : textarea.scrollHeight)+'px';
     },
 
     handleKeyDown: function (e) {
-      var pressSubmit = !(e.metaKey || e.ctrlKey) && e.keyCode === 13;
-      var pressNewLine = (e.metaKey || e.ctrlKey) && e.keyCode === 13;
+      // Если нажата клавиша Enter …
+      if (e.keyCode === 13) {
+        // … и нажата meta-клавиша
+        if (e.metaKey || e.ctrlKey) {
+          // делаем перевод строки
+          var area = document.getElementsByName('text').item(0);
 
-      if (pressSubmit) {
-        this.handleSubmit(e);
-      }
+          if (area.selectionStart || area.selectionStart == '0') {
+            var start = area.selectionStart;
+            var end = area.selectionEnd;
 
-      if (pressNewLine) {
-        var area = document.getElementsByName('text').item(0);
-        if ( (area.selectionStart) || (area.selectionStart == '0') ) {
-          var start = area.selectionStart;
-          var end = area.selectionEnd;
-          area.value = area.value.substring(0, start) +
-            '\n' + area.value.substring(end, area.value.length);
-          area.setSelectionRange(start + 1, start + 1);
+            area.value = area.value.substring(0, start) + '\n' + area.value.substring(end, area.value.length);
+            area.setSelectionRange(start + 1, start + 1);
+          }
+        } else {
+          // иначе — отправляем сообщение
+          this.handleSubmit(e);
         }
       }
 
@@ -191,32 +201,17 @@ var ChatComponent = function (socket) {
     render: function () {
       var messagePlugins = this.props.plugins || [];
       return (
-        <div className='send'>
+        <div className="send">
           <form className="send__form" onSubmit={this.handleSubmit} ref="formMsg">
-            <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize} name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
+            <textarea className="send__text" onKeyDown={this.handleKeyDown} onKeyUp={this.resize} onInput={this.resize}
+              name="text" ref="text" placeholder="Сообщение" autoFocus required rows="1" />
+
             {messagePlugins.map(function (PluginComponent) {
-              return <PluginComponent/>;
+              return (<PluginComponent />);
             })}
-            <button type="submit" className="hidden" ref="submitButton">Post message</button>
           </form>
         </div>
       );
-    }
-  });
-
-  var MessageDate = React.createClass({
-    render: function () {
-      var localDate = new Date(this.props.date);
-      var hour = localDate.getHours();
-      var minutes = localDate.getMinutes();
-      var date = ('0' + hour).slice(-2) + ':' + ('0' + minutes).slice(-2);
-      var day = localDate.getDate();
-      var month = localDate.getMonth();
-      var fullDate = date + ' ' + ('0' + day).slice(-2) + '/' +
-        ('0' + month).slice(-2) + '/' + localDate.getFullYear();
-      return (
-        <span className='msg__date' title={fullDate}>{date}</span>
-      )
     }
   });
 

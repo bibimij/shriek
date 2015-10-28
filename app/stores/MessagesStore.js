@@ -31,9 +31,11 @@ var MessagesStoreFunction = function () {
       this.messages = fetched_data.messages;
     } else {
       var messagesAll = fetched_data.messages;
+
       this.messages.map(function (message) {
         messagesAll.push(message);
       });
+
       this.messages = messagesAll;
     }
   };
@@ -42,7 +44,7 @@ var MessagesStoreFunction = function () {
     var listOfMessages = [];
 
     this.messages.map(function (message) {
-      message.searched = (_ids == message._id ? true : false);
+      message.searched = _ids === message._id;
       listOfMessages.push(message);
     });
 
@@ -64,8 +66,8 @@ var MessagesStoreFunction = function () {
   if (MessagesStoreObj === null) {
     MessagesStoreObj = alt_obj.createStore(MessagesStore);
   }
-  return MessagesStoreObj;
 
+  return MessagesStoreObj;
 };
 
 module.exports = MessagesStoreFunction;

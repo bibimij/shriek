@@ -147,7 +147,7 @@ var LoginComponent = function(socket) {
         // passport login
         if (this.state.passportInit) {
           socket.emit('user enter', {username: this.state.passportUser,
-            password: this.state.password, passposrtInit: true})
+            password: this.state.password, passportInit: true})
         }
 
         // local login

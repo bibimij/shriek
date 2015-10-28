@@ -96,11 +96,11 @@ var SettingComponent = function (socket) {
         <form className="form modal__body setting" onSubmit={this.handleSave}>
           <div className="form__row">
             <label className="form__label" htmlFor="inputFirstName"><i className="fa fa-edit"></i></label>
-            <input className="form__text" onChange={this.handleFirstNameChange} type="text" id="inputFirstName" placeholder="First name" value={this.state.first_name} />
+            <input className="form__text" onChange={this.handleFirstNameChange} type="text" id="inputFirstName" placeholder="Имя" value={this.state.first_name} />
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputLastName"><i className="fa fa-edit"></i></label>
-            <input className="form__text" onChange={this.handleLastNameChange} type="text" id="inputLastName" placeholder="Last name" value={this.state.last_name} />
+            <input className="form__text" onChange={this.handleLastNameChange} type="text" id="inputLastName" placeholder="Фамилия" value={this.state.last_name} />
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputEmail"><i className="fa fa-envelope-o"></i></label>
@@ -108,32 +108,32 @@ var SettingComponent = function (socket) {
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputImage"><i className="fa fa-picture-o"></i></label>
-            <input className="form__text" onChange={this.handleImageChange} type="url" id="inputImage" placeholder="Url of Image" value={this.state.image} />
+            <input className="form__text" onChange={this.handleImageChange} type="url" id="inputImage" placeholder="URL аватарки" value={this.state.image} />
           </div>
           <div className="form__row form__row-radio">
-            <span className="form__label"><i className="fa fa-venus-mars"></i></span>
-            <input className="form__radio" name="sex" onChange={this.handleSexChange} type="radio" id="inputSexMale" value="male" defaultChecked={this.state.sex === 'male'} />
+            <input className="form__radio" name="sex" onChange={this.handleSexChange} type="radio" id="inputSexMale" value="мужской" defaultChecked={this.state.sex === 'male'} />
             <label htmlFor="inputSexMale" className="btn">
               <i className="fa fa-mars"></i>
             </label>
-            <input className="form__radio" name="sex" onChange={this.handleSexChange} type="radio" id="inputSexFemale" value="female" defaultChecked={this.state.sex === 'female'} />
+
+            <input className="form__radio" name="sex" onChange={this.handleSexChange} type="radio" id="inputSexFemale" value="женский" defaultChecked={this.state.sex === 'female'} />
             <label htmlFor="inputSexFemale" className="btn">
               <i className="fa fa-venus"></i>
             </label>
           </div>
           <div className="form__row">
             <label className="form__label" htmlFor="inputDescription"><i className="fa fa-edit"></i></label>
-            <textarea className="form__textarea" onChange={this.handleDescriptionChange} id="inputDescription" placeholder="Description" value={this.state.description} />
+            <textarea className="form__textarea" onChange={this.handleDescriptionChange} id="inputDescription" placeholder="О себе" value={this.state.description} />
           </div>
-          <button className="btn" onClick={this.handleSave} type="submit">Update</button>
-          <span> </span>
-          <button className="btn" onClick={this.handleClose} type="button">Close</button>
+
+          <button className="btn" type="submit">Сохранить</button>
+          <button className="btn" onClick={this.handleClose} type="button">Отменить</button>
         </form>
       );
 
       return (
         <div>
-          {this.state.opened == true && (
+          {this.state.opened&& (
             <div className="modal" ref="overlaySetting">
                 {formSetting}
             </div>
