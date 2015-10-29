@@ -14,14 +14,18 @@ var SearchResultComponent = function (socket) {
 
     render: function () {
       var _this = this;
-      var Messages = (<div>Загрузка сообщений…</div>);
-      if (this.props.messages) {
+      var Messages;
+
+      if (this.props.messages.length) {
         Messages = this.props.messages.map(function (message) {
           return (<SearchResult message={message} key={'search' + message._id} handleClose={_this.handleClose} />);
         });
+      } else {
+        Messages = (<div>Поиск не дал результатов</div>);
       }
+
       return (
-        <div className='search-results'>
+        <div className="search-results">
           {Messages}
         </div>
       );
@@ -67,18 +71,14 @@ var SearchResultComponent = function (socket) {
       var fullDate = moment(this.props.message.created_at).format('HH:mm, DD/MM/YYYY');
 
       return (
-        <div className='search-result'>
-          <span className='search-result__author'>{this.props.message.username} ({this.props.message.channel})</span>
-          <span className='search-result__date'>{fullDate}</span>
-          <div
+        <div className="search-result"
             data-id={this.props.message._id}
             data-channel={this.props.message.channel}
             data-date={this.props.message.created_at}
-            onClick={this.handleJump}
-            className='search-result__text'
-            dangerouslySetInnerHTML={{
-              __html: this.props.message.text
-            }} />
+            onClick={this.handleJump}>
+          <span className="search-result__author">{this.props.message.username} ({this.props.message.channel})</span>
+          <span className="search-result__date">{fullDate}</span>
+          <div className="search-result__text" dangerouslySetInnerHTML={{__html: this.props.message.text}} />
         </div>
       );
     }

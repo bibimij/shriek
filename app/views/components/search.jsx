@@ -9,30 +9,36 @@ var ChannelsStore = require('./../../stores/ChannelsStore')(socket); // подк
     },
 
     handleSearch: function (e) {
-      if ($('#search').val().trim()) {
-        var chList = [];
-        ChannelsStore.getState().channels.map(function(ch) {
-          chList.push(ch.slug);
+      e.preventDefault();
+
+      var searchBox = $('#search');
+      var searchQuery = searchBox.val().trim();
+
+      if (searchQuery) {
+        var chList = ChannelsStore.getState().channels.map(function(ch) {
+          return ch.slug;
         });
 
         socket.emit('search text', {
           channels: chList,
-          text: $('#search').val().trim()
+          text: searchQuery
         });
-        $('#search').val('');
+      } else {
+        searchBox.focus();
       }
     },
 
     render: function () {
       return (
-        <div className="search">
+        <form className="search" onSubmit={this.handleSearch}>
           <div className="form__row">
-            <label className="form__label" htmlFor="search" onClick={this.handleSearch}>
+            <button type="submit" className="form__label">
               <i className="fa fa-search"></i>
-            </label>
+            </button>
+
             <input className="form__text" type="text" id="search" ref="search" placeholder="Поиск" />
           </div>
-        </div>
+        </form>
       );
     }
   });

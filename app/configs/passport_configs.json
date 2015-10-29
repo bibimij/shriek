@@ -1,7 +1,7 @@
 {
   "twitter": {
-    "key": "HEt5IuGQPv4bj75wNTqyLux8x",
-    "secret": "h3FVM0GryVVdIGx7qMU4WxBzOudreASS3MPJvEH1DBYkXBiETC"
+    "key": "EWADn4UfGAlBGsfoK7EX5Cyaj",
+    "secret": "5jQ8scg6LzqBg8XybJ71NQl9nomRledwSBTQcOLeEkG4FPdA3C"
   },
 
   "google": {
@@ -10,7 +10,7 @@
   },
 
   "github": {
-    "key": "d5e6db20f77252718eee",
-    "secret": "24c0014b9e850ca91dab7e3880e760c11a5cd6f7"
+    "key": "62c9697a25c2afa46d00",
+    "secret": "9b3dd2f7fbda03304ac4557a4b5b413bb5c74152"
   }
 }
